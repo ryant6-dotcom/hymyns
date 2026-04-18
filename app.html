@@ -3,8 +3,66 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Joseph Smith Game | Ryan Thomas</title>
+  <title>Joseph Smith Journey Game | Ryan Thomas</title>
   <link rel="stylesheet" href="scratch.css">
+  <style>
+    #game-container {
+      text-align: center;
+    }
+
+    #scene-image {
+      width: 100%;
+      max-width: 700px;
+      height: 320px;
+      object-fit: cover;
+      border-radius: 10px;
+      border: 2px solid #c9b79c;
+      margin: 20px auto;
+      display: block;
+    }
+
+    #stats {
+      font-size: 18px;
+      margin-bottom: 20px;
+      color: #5a2a27;
+    }
+
+    #scene-title {
+      margin-top: 10px;
+      color: #5a2a27;
+    }
+
+    #scene-text {
+      font-size: 18px;
+      line-height: 1.6;
+      max-width: 800px;
+      margin: 0 auto 20px auto;
+    }
+
+    #choices {
+      margin-top: 20px;
+    }
+
+    .choice-btn, .restart-btn {
+      background-color: #7a1f1f;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      margin: 10px;
+      font-size: 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-family: Georgia, serif;
+    }
+
+    .choice-btn:hover, .restart-btn:hover {
+      background-color: #5e1717;
+    }
+
+    .hidden {
+      display: none;
+    }
+  </style>
 </head>
 <body>
   <div class="top-bar">
@@ -16,19 +74,207 @@
 
   <div class="hero">
     <h1>Joseph Smith Journey Game</h1>
-    <p>This page contains a small interactive game built with HTML, CSS, and JavaScript.</p>
+    <p>Move through major moments of early Church history and make choices along the way.</p>
   </div>
 
   <div class="content-box">
-    <h2>About the Game</h2>
-    <p>
-      This game will be a choice-based interactive experience. Players will read short scenes,
-      make decisions, and progress through important events in sequence.
-    </p>
-    <h2>Game Area</h2>
     <div id="game-container">
-      <p>The game will go here next.</p>
+      <div id="stats">Faith: 0 | Knowledge: 0</div>
+      <img id="scene-image" src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/Sacred_Grove.jpg/800px-Sacred_Grove.jpg" alt="Game scene image">
+      <h2 id="scene-title">Start the Journey</h2>
+      <p id="scene-text">
+        You are beginning a journey through important moments in Joseph Smith’s life. Your choices will affect your faith and knowledge as you move from scene to scene.
+      </p>
+      <div id="choices"></div>
+      <button id="restart-btn" class="restart-btn hidden">Restart Game</button>
     </div>
   </div>
+
+  <script>
+    let faith = 0;
+    let knowledge = 0;
+    let currentScene = "start";
+
+    const scenes = {
+      start: {
+        title: "Start the Journey",
+        image: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/Sacred_Grove.jpg/800px-Sacred_Grove.jpg",
+        text: "Young Joseph is searching for truth and wondering which church he should join. He reads James 1:5 and feels inspired to act.",
+        choices: [
+          {
+            text: "Go to the grove and pray",
+            next: "firstVision",
+            faith: 2,
+            knowledge: 1
+          },
+          {
+            text: "Keep wondering but do nothing",
+            next: "delay",
+            faith: 0,
+            knowledge: 0
+          }
+        ]
+      },
+      delay: {
+        title: "A Delayed Decision",
+        image: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/Sacred_Grove.jpg/800px-Sacred_Grove.jpg",
+        text: "Waiting leaves Joseph without answers. Eventually he decides that if he wants direction, he has to seek it.",
+        choices: [
+          {
+            text: "Finally go and pray",
+            next: "firstVision",
+            faith: 1,
+            knowledge: 1
+          }
+        ]
+      },
+      firstVision: {
+        title: "The First Vision",
+        image: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/Sacred_Grove.jpg/800px-Sacred_Grove.jpg",
+        text: "Joseph prays in the Sacred Grove and receives a vision that changes everything. He learns that God hears sincere prayer.",
+        choices: [
+          {
+            text: "Share the experience despite opposition",
+            next: "opposition",
+            faith: 2,
+            knowledge: 1
+          },
+          {
+            text: "Stay quiet and reflect first",
+            next: "opposition",
+            faith: 1,
+            knowledge: 2
+          }
+        ]
+      },
+      opposition: {
+        title: "Opposition Comes",
+        image: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/Cumorah.jpg/800px-Cumorah.jpg",
+        text: "Not everyone believes Joseph’s account. Even so, more revelation comes, including visits from Moroni and instruction about the plates.",
+        choices: [
+          {
+            text: "Remain faithful through criticism",
+            next: "translation",
+            faith: 2,
+            knowledge: 0
+          },
+          {
+            text: "Focus on learning and preparation",
+            next: "translation",
+            faith: 1,
+            knowledge: 2
+          }
+        ]
+      },
+      translation: {
+        title: "The Book of Mormon Translation",
+        image: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/Whitmer_Farm_in_Fayette%2C_New_York.jpg/800px-Whitmer_Farm_in_Fayette%2C_New_York.jpg",
+        text: "Joseph works with others to bring forth the Book of Mormon. The work requires faith, patience, and help from trusted people.",
+        choices: [
+          {
+            text: "Rely on helpers and keep working",
+            next: "church",
+            faith: 1,
+            knowledge: 2
+          },
+          {
+            text: "Press forward with determination",
+            next: "church",
+            faith: 2,
+            knowledge: 1
+          }
+        ]
+      },
+      church: {
+        title: "The Church Is Organized",
+        image: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/Peter_Whitmer_Farm.jpg/800px-Peter_Whitmer_Farm.jpg",
+        text: "The Church is formally organized in 1830. A small beginning grows through testimony, leadership, and continuing revelation.",
+        choices: [
+          {
+            text: "Lead with courage",
+            next: "ending",
+            faith: 2,
+            knowledge: 1
+          },
+          {
+            text: "Teach and strengthen others",
+            next: "ending",
+            faith: 1,
+            knowledge: 2
+          }
+        ]
+      },
+      ending: {
+        title: "Journey Complete",
+        image: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Nauvoo_Temple.jpg/800px-Nauvoo_Temple.jpg",
+        text: "",
+        choices: []
+      }
+    };
+
+    function updateStats() {
+      document.getElementById("stats").textContent = `Faith: ${faith} | Knowledge: ${knowledge}`;
+    }
+
+    function renderScene(sceneKey) {
+      currentScene = sceneKey;
+      const scene = scenes[sceneKey];
+
+      document.getElementById("scene-title").textContent = scene.title;
+      document.getElementById("scene-image").src = scene.image;
+      document.getElementById("scene-image").alt = scene.title;
+
+      if (sceneKey === "ending") {
+        let result = "";
+        if (faith >= 7 && knowledge >= 7) {
+          result = "You finished with strong faith and strong knowledge. You balanced action, learning, and perseverance throughout the journey.";
+        } else if (faith > knowledge) {
+          result = "You finished with especially strong faith. Your choices showed courage, trust, and willingness to move forward.";
+        } else if (knowledge > faith) {
+          result = "You finished with especially strong knowledge. Your choices showed thoughtful learning, preparation, and understanding.";
+        } else {
+          result = "You finished with a balanced journey. You gained both faith and knowledge as you moved through these important events.";
+        }
+
+        document.getElementById("scene-text").textContent =
+          `Final Score — Faith: ${faith}, Knowledge: ${knowledge}. ${result}`;
+      } else {
+        document.getElementById("scene-text").textContent = scene.text;
+      }
+
+      const choicesDiv = document.getElementById("choices");
+      choicesDiv.innerHTML = "";
+
+      scene.choices.forEach(choice => {
+        const button = document.createElement("button");
+        button.className = "choice-btn";
+        button.textContent = choice.text;
+        button.onclick = () => {
+          faith += choice.faith;
+          knowledge += choice.knowledge;
+          updateStats();
+          renderScene(choice.next);
+        };
+        choicesDiv.appendChild(button);
+      });
+
+      const restartBtn = document.getElementById("restart-btn");
+      if (sceneKey === "ending") {
+        restartBtn.classList.remove("hidden");
+      } else {
+        restartBtn.classList.add("hidden");
+      }
+    }
+
+    document.getElementById("restart-btn").addEventListener("click", () => {
+      faith = 0;
+      knowledge = 0;
+      updateStats();
+      renderScene("start");
+    });
+
+    updateStats();
+    renderScene("start");
+  </script>
 </body>
 </html>
