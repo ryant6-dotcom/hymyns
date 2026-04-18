@@ -3,54 +3,74 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Joseph Smith Journey Game | Ryan Thomas</title>
+  <title>Joseph Smith Timeline Game | Ryan Thomas</title>
   <link rel="stylesheet" href="scratch.css">
   <style>
     #game-container {
       text-align: center;
     }
 
-    #scene-image {
-      width: 100%;
-      max-width: 700px;
-      height: 320px;
-      object-fit: cover;
-      border-radius: 10px;
+    .scene-panel {
+      background: linear-gradient(135deg, #efe4d1, #d8c3a5);
       border: 2px solid #c9b79c;
+      border-radius: 14px;
+      padding: 30px 20px;
       margin: 20px auto;
-      display: block;
+      max-width: 850px;
+    }
+
+    #scene-art {
+      width: 100%;
+      max-width: 760px;
+      min-height: 220px;
+      margin: 0 auto 20px auto;
+      border-radius: 12px;
+      border: 2px solid #b49b7a;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      box-sizing: border-box;
+      font-size: 28px;
+      line-height: 1.4;
+      color: #5a2a27;
+      background: rgba(255,255,255,0.55);
     }
 
     #stats {
       font-size: 18px;
-      margin-bottom: 20px;
+      margin-bottom: 18px;
       color: #5a2a27;
+      font-weight: bold;
     }
 
     #scene-title {
-      margin-top: 10px;
       color: #5a2a27;
+      margin-bottom: 10px;
     }
 
     #scene-text {
       font-size: 18px;
       line-height: 1.6;
-      max-width: 800px;
+      max-width: 780px;
       margin: 0 auto 20px auto;
     }
 
     #choices {
-      margin-top: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      max-width: 760px;
+      margin: 0 auto;
     }
 
     .choice-btn, .restart-btn {
       background-color: #7a1f1f;
       color: white;
       border: none;
-      padding: 12px 20px;
-      margin: 10px;
+      padding: 14px 18px;
       font-size: 16px;
-      border-radius: 8px;
+      border-radius: 10px;
       cursor: pointer;
       font-family: Georgia, serif;
     }
@@ -59,8 +79,18 @@
       background-color: #5e1717;
     }
 
+    .restart-btn {
+      margin-top: 20px;
+    }
+
     .hidden {
       display: none;
+    }
+
+    .note {
+      margin-top: 16px;
+      font-size: 15px;
+      color: #6b4b3e;
     }
   </style>
 </head>
@@ -73,193 +103,322 @@
   </div>
 
   <div class="hero">
-    <h1>Joseph Smith Journey Game</h1>
-    <p>Move through major moments of early Church history and make choices along the way.</p>
+    <h1>Joseph Smith Timeline Game</h1>
+    <p>Choose the real path of history or wander into strange alternate timelines.</p>
   </div>
 
   <div class="content-box">
     <div id="game-container">
-      <div id="stats">Faith: 0 | Knowledge: 0</div>
-      <img id="scene-image" src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/Sacred_Grove.jpg/800px-Sacred_Grove.jpg" alt="Game scene image">
-      <h2 id="scene-title">Start the Journey</h2>
-      <p id="scene-text">
-        You are beginning a journey through important moments in Joseph Smith’s life. Your choices will affect your faith and knowledge as you move from scene to scene.
-      </p>
-      <div id="choices"></div>
-      <button id="restart-btn" class="restart-btn hidden">Restart Game</button>
+      <div id="stats">History Points: 0 | Timeline Stability: 100</div>
+
+      <div class="scene-panel">
+        <div id="scene-art">Sacred Grove Scene Placeholder</div>
+        <h2 id="scene-title">Start</h2>
+        <p id="scene-text">Loading scene...</p>
+        <div id="choices"></div>
+        <button id="restart-btn" class="restart-btn hidden">Restart Game</button>
+        <p class="note">Hint: the historically accurate option is usually the most normal and sincere one.</p>
+      </div>
     </div>
   </div>
 
   <script>
-    let faith = 0;
-    let knowledge = 0;
-    let currentScene = "start";
+    let historyPoints = 0;
+    let timelineStability = 100;
 
     const scenes = {
       start: {
-        title: "Start the Journey",
-        image: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/Sacred_Grove.jpg/800px-Sacred_Grove.jpg",
-        text: "Young Joseph is searching for truth and wondering which church he should join. He reads James 1:5 and feels inspired to act.",
+        title: "Upstate New York, 1820",
+        art: "🌲 A quiet grove of trees. A young Joseph wants to know which church is right.",
+        text: "Joseph is confused by the religious excitement around him. He reads James 1:5 and realizes he should ask God directly.",
         choices: [
-          {
-            text: "Go to the grove and pray",
-            next: "firstVision",
-            faith: 2,
-            knowledge: 1
-          },
-          {
-            text: "Keep wondering but do nothing",
-            next: "delay",
-            faith: 0,
-            knowledge: 0
-          }
+          { text: "Go into the grove and pray sincerely for guidance", next: "firstVision", history: 2, stability: 0 },
+          { text: "Ask a squirrel to organize a denomination called Acorn Theology", next: "squirrelTimeline", history: 0, stability: -35 },
+          { text: "Do nothing and devote his life to professional marble racing", next: "marbleTimeline", history: 0, stability: -25 }
         ]
       },
-      delay: {
-        title: "A Delayed Decision",
-        image: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/Sacred_Grove.jpg/800px-Sacred_Grove.jpg",
-        text: "Waiting leaves Joseph without answers. Eventually he decides that if he wants direction, he has to seek it.",
-        choices: [
-          {
-            text: "Finally go and pray",
-            next: "firstVision",
-            faith: 1,
-            knowledge: 1
-          }
-        ]
-      },
+
       firstVision: {
         title: "The First Vision",
-        image: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/Sacred_Grove.jpg/800px-Sacred_Grove.jpg",
-        text: "Joseph prays in the Sacred Grove and receives a vision that changes everything. He learns that God hears sincere prayer.",
+        art: "☀️ Light breaks through the trees in the Sacred Grove.",
+        text: "Joseph prays and receives a divine answer. He learns that God hears prayer and that he should not join any of the churches then existing.",
         choices: [
-          {
-            text: "Share the experience despite opposition",
-            next: "opposition",
-            faith: 2,
-            knowledge: 1
-          },
-          {
-            text: "Stay quiet and reflect first",
-            next: "opposition",
-            faith: 1,
-            knowledge: 2
-          }
+          { text: "Remember the vision and stay faithful despite opposition", next: "moroni", history: 2, stability: 0 },
+          { text: "Open a sandwich shop called Celestial Subs and never mention the experience", next: "sandwichTimeline", history: 0, stability: -30 },
+          { text: "Try to explain the vision by inventing competitive cloud wrestling", next: "cloudTimeline", history: 0, stability: -30 }
         ]
       },
-      opposition: {
-        title: "Opposition Comes",
-        image: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/Cumorah.jpg/800px-Cumorah.jpg",
-        text: "Not everyone believes Joseph’s account. Even so, more revelation comes, including visits from Moroni and instruction about the plates.",
+
+      moroni: {
+        title: "Moroni's Visits",
+        art: "🌙 Night falls. An angel appears with instruction about an ancient record.",
+        text: "Years later, Moroni visits Joseph and tells him about the gold plates. Joseph learns he must be patient and prepared before receiving them.",
         choices: [
-          {
-            text: "Remain faithful through criticism",
-            next: "translation",
-            faith: 2,
-            knowledge: 0
-          },
-          {
-            text: "Focus on learning and preparation",
-            next: "translation",
-            faith: 1,
-            knowledge: 2
-          }
+          { text: "Listen carefully, return each year, and wait until the right time", next: "plates", history: 2, stability: 0 },
+          { text: "Challenge Moroni to a dunk contest on an invisible hoop", next: "dunkTimeline", history: 0, stability: -25 },
+          { text: "Trade the future plates for seven llamas and a drum set", next: "llamaTimeline", history: 0, stability: -35 }
         ]
       },
+
+      plates: {
+        title: "Receiving the Plates",
+        art: "📜 Joseph finally receives the plates and begins the work entrusted to him.",
+        text: "Joseph receives the plates and is told to protect them. Opposition grows, but the work moves forward.",
+        choices: [
+          { text: "Safeguard the plates and prepare to translate", next: "translation", history: 2, stability: 0 },
+          { text: "Use the plates as the world's least practical sled", next: "sledTimeline", history: 0, stability: -30 },
+          { text: "Start a traveling show called Metallic Mysteries Live", next: "showTimeline", history: 0, stability: -25 }
+        ]
+      },
+
       translation: {
-        title: "The Book of Mormon Translation",
-        image: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/Whitmer_Farm_in_Fayette%2C_New_York.jpg/800px-Whitmer_Farm_in_Fayette%2C_New_York.jpg",
-        text: "Joseph works with others to bring forth the Book of Mormon. The work requires faith, patience, and help from trusted people.",
+        title: "Translation Begins",
+        art: "✍️ Scribes, pages, and long hours of careful work.",
+        text: "Joseph works with Martin Harris, Oliver Cowdery, and others in the translation of the Book of Mormon.",
         choices: [
-          {
-            text: "Rely on helpers and keep working",
-            next: "church",
-            faith: 1,
-            knowledge: 2
-          },
-          {
-            text: "Press forward with determination",
-            next: "church",
-            faith: 2,
-            knowledge: 1
-          }
+          { text: "Translate the record with help from trusted scribes", next: "lostPages", history: 2, stability: 0 },
+          { text: "Rewrite everything as a cookbook titled Plates and Gravies", next: "cookbookTimeline", history: 0, stability: -30 },
+          { text: "Turn the project into a pirate radio show", next: "radioTimeline", history: 0, stability: -25 }
         ]
       },
-      church: {
+
+      lostPages: {
+        title: "The Lost 116 Pages",
+        art: "📄 A painful setback tests faith, patience, and obedience.",
+        text: "Martin Harris takes the translated manuscript pages, and they are lost. Joseph learns a hard lesson and presses forward.",
+        choices: [
+          { text: "Repent, keep going, and continue the translation work", next: "priesthood", history: 2, stability: 0 },
+          { text: "Declare that the pages were eaten by extremely literate raccoons", next: "raccoonTimeline", history: 0, stability: -25 },
+          { text: "Replace the pages with fan fiction about time-traveling wheat", next: "wheatTimeline", history: 0, stability: -30 }
+        ]
+      },
+
+      priesthood: {
+        title: "Priesthood Restoration",
+        art: "🏞️ By the river, authority is restored through heavenly messengers.",
+        text: "Joseph and Oliver receive the Aaronic Priesthood from John the Baptist and are later given additional priesthood authority by Peter, James, and John.",
+        choices: [
+          { text: "Receive the authority and continue the Lord's work", next: "churchOrganized", history: 2, stability: 0 },
+          { text: "Open a theme park ride called Baptism Mountain Extreme", next: "themeParkTimeline", history: 0, stability: -30 },
+          { text: "Use the moment to launch a line of very formal beaver hats", next: "hatTimeline", history: 0, stability: -20 }
+        ]
+      },
+
+      churchOrganized: {
         title: "The Church Is Organized",
-        image: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/Peter_Whitmer_Farm.jpg/800px-Peter_Whitmer_Farm.jpg",
-        text: "The Church is formally organized in 1830. A small beginning grows through testimony, leadership, and continuing revelation.",
+        art: "⛪ A small gathering marks a beginning that will grow far beyond this room.",
+        text: "On April 6, 1830, the Church is formally organized. What began with a prayer in a grove now becomes a restored church with a future.",
         choices: [
-          {
-            text: "Lead with courage",
-            next: "ending",
-            faith: 2,
-            knowledge: 1
-          },
-          {
-            text: "Teach and strengthen others",
-            next: "ending",
-            faith: 1,
-            knowledge: 2
-          }
+          { text: "Finish the historical path and preserve the timeline", next: "trueEnding", history: 3, stability: 0 },
+          { text: "Replace the meeting with a juggling tournament judged by geese", next: "gooseTimeline", history: 0, stability: -35 },
+          { text: "Accidentally create a society devoted entirely to decorative spoons", next: "spoonTimeline", history: 0, stability: -25 }
         ]
       },
-      ending: {
-        title: "Journey Complete",
-        image: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Nauvoo_Temple.jpg/800px-Nauvoo_Temple.jpg",
+
+      trueEnding: {
+        title: "Historical Timeline Secured",
+        art: "✅ The timeline holds. The major events unfolded in the right order.",
         text: "",
         choices: []
+      },
+
+      squirrelTimeline: {
+        title: "The Squirrel Timeline",
+        art: "🐿️ Tiny forest clergy now debate doctrine from tree branches.",
+        text: "Without the prayer in the grove, history slips immediately. A squirrel-led denomination dominates the Northeast, and sermons are paid for in acorns.",
+        choices: [
+          { text: "Try again from the beginning", next: "start", history: 0, stability: 0 },
+          { text: "Continue deeper into nonsense", next: "crazyEnding1", history: 0, stability: -10 }
+        ]
+      },
+
+      marbleTimeline: {
+        title: "Marble Racing Timeline",
+        art: "🌀 Stadiums fill with people cheering glass spheres rolling down velvet ramps.",
+        text: "Joseph never asks God and instead becomes the undisputed champion of marble racing. American religion changes very little, but sports historians are thrilled.",
+        choices: [
+          { text: "Return to the real path", next: "start", history: 0, stability: 0 },
+          { text: "See where this absurdity leads", next: "crazyEnding2", history: 0, stability: -10 }
+        ]
+      },
+
+      sandwichTimeline: {
+        title: "Celestial Subs Timeline",
+        art: "🥪 A glowing sandwich board reads: Ask and ye shall eat.",
+        text: "Joseph opens a sandwich shop instead of sharing the vision. Reviews are excellent, theology is delayed, and nobody agrees on the proper number of pickles.",
+        choices: [
+          { text: "Restart and make the real choice", next: "start", history: 0, stability: 0 }
+        ]
+      },
+
+      cloudTimeline: {
+        title: "Cloud Wrestling Timeline",
+        art: "☁️ Scholars argue whether a cumulonimbus can legally pin a man.",
+        text: "Joseph tells everyone he has pioneered cloud wrestling. The newspapers are fascinated, but the timeline bends alarmingly.",
+        choices: [
+          { text: "Restart", next: "start", history: 0, stability: 0 }
+        ]
+      },
+
+      dunkTimeline: {
+        title: "Moroni Dunk Contest Timeline",
+        art: "🏀 An invisible hoop becomes the center of frontier theology.",
+        text: "Historians can confirm only one thing: this was not the intended message. Rural New York becomes oddly committed to celestial basketball.",
+        choices: [
+          { text: "Restart", next: "start", history: 0, stability: 0 }
+        ]
+      },
+
+      llamaTimeline: {
+        title: "Llama Trade Timeline",
+        art: "🦙 Seven llamas stare with deep disappointment.",
+        text: "Joseph trades everything for llamas and a drum set. The Catholic Church later canonizes Harry Potter and creates a wizard class of priests as a butterfly-effect consequence.",
+        choices: [
+          { text: "Restart before reality gets worse", next: "start", history: 0, stability: 0 }
+        ]
+      },
+
+      sledTimeline: {
+        title: "Plate Sled Timeline",
+        art: "🛷 The least aerodynamic sled in human history is unveiled.",
+        text: "Using sacred records as sled equipment does not improve either transportation or civilization. Snow sports advance, but the timeline does not.",
+        choices: [
+          { text: "Restart", next: "start", history: 0, stability: 0 }
+        ]
+      },
+
+      showTimeline: {
+        title: "Metallic Mysteries Live",
+        art: "🎪 Curtains rise. Absolutely nobody understands the plot.",
+        text: "The whole thing becomes a traveling stage performance featuring smoke, brass music, and a suspiciously overcommitted narrator.",
+        choices: [
+          { text: "Restart", next: "start", history: 0, stability: 0 }
+        ]
+      },
+
+      cookbookTimeline: {
+        title: "Plates and Gravies",
+        art: "🍲 Frontier kitchens rejoice. Historians do not.",
+        text: "Instead of scripture, the world receives a cookbook. One section on potatoes becomes legendary, but the actual mission is clearly off course.",
+        choices: [
+          { text: "Restart", next: "start", history: 0, stability: 0 }
+        ]
+      },
+
+      radioTimeline: {
+        title: "Pirate Radio Timeline",
+        art: "📻 Static, banjos, and unlicensed broadcasting fill the air.",
+        text: "The translation becomes a radio serial before radio exists. Nobody can explain it, which is only one of many problems.",
+        choices: [
+          { text: "Restart", next: "start", history: 0, stability: 0 }
+        ]
+      },
+
+      raccoonTimeline: {
+        title: "Literate Raccoon Timeline",
+        art: "🦝 Tiny spectacles. Tiny paws. Massive manuscript problems.",
+        text: "A nation searches in vain for the manuscript while unusually educated raccoons deny everything through legal counsel.",
+        choices: [
+          { text: "Restart", next: "start", history: 0, stability: 0 }
+        ]
+      },
+
+      wheatTimeline: {
+        title: "Time-Travel Wheat Timeline",
+        art: "🌾 Grain from the future now dominates local discussion.",
+        text: "Replacing lost pages with wheat-based fan fiction solves very little. Farmers are intrigued. Everyone else is confused.",
+        choices: [
+          { text: "Restart", next: "start", history: 0, stability: 0 }
+        ]
+      },
+
+      themeParkTimeline: {
+        title: "Baptism Mountain Extreme",
+        art: "🎢 Safety inspectors resign immediately.",
+        text: "Someone turns a sacred moment into a frontier theme park. The line is long, the reviews are mixed, and the timeline collapses further.",
+        choices: [
+          { text: "Restart", next: "start", history: 0, stability: 0 }
+        ]
+      },
+
+      hatTimeline: {
+        title: "Formal Beaver Hat Timeline",
+        art: "🎩 Every serious event now requires an unnecessary hat.",
+        text: "The priesthood restoration becomes famous mainly for its hat line. The hats are elegant. The historical accuracy is not.",
+        choices: [
+          { text: "Restart", next: "start", history: 0, stability: 0 }
+        ]
+      },
+
+      gooseTimeline: {
+        title: "Goose Juggling Timeline",
+        art: "🪿 The geese are hostile and impossible to impress.",
+        text: "The organizational meeting is replaced by a juggling tournament judged by geese. Nobody wins. The geese declare only chaos.",
+        choices: [
+          { text: "Restart", next: "start", history: 0, stability: 0 }
+        ]
+      },
+
+      spoonTimeline: {
+        title: "Decorative Spoon Timeline",
+        art: "🥄 Cabinets everywhere become unexpectedly beautiful.",
+        text: "Instead of a church, a spoon society emerges. Their craftsmanship is admirable, but the timeline remains badly broken.",
+        choices: [
+          { text: "Restart", next: "start", history: 0, stability: 0 }
+        ]
+      },
+
+      crazyEnding1: {
+        title: "Total Timeline Collapse",
+        art: "💥 Acorn inflation, squirrel bishops, and doctrinal tree maps consume the republic.",
+        text: "Reality has become too unstable to continue. You should probably go back and choose the sincere option next time.",
+        choices: [
+          { text: "Restart the game", next: "start", history: 0, stability: 0 }
+        ]
+      },
+
+      crazyEnding2: {
+        title: "Sports Historian Ending",
+        art: "🏆 Marble arenas replace meetinghouses in the public imagination.",
+        text: "You have preserved competition, but not history. Impressive dedication to marbles, unfortunate outcome for basically everything else.",
+        choices: [
+          { text: "Restart the game", next: "start", history: 0, stability: 0 }
+        ]
       }
     };
 
     function updateStats() {
-      document.getElementById("stats").textContent = `Faith: ${faith} | Knowledge: ${knowledge}`;
+      document.getElementById("stats").textContent =
+        `History Points: ${historyPoints} | Timeline Stability: ${timelineStability}`;
     }
 
-    function renderScene(sceneKey) {
-      currentScene = sceneKey;
-      const scene = scenes[sceneKey];
-
+    function renderScene(key) {
+      const scene = scenes[key];
       document.getElementById("scene-title").textContent = scene.title;
-      document.getElementById("scene-image").src = scene.image;
-      document.getElementById("scene-image").alt = scene.title;
-
-      if (sceneKey === "ending") {
-        let result = "";
-        if (faith >= 7 && knowledge >= 7) {
-          result = "You finished with strong faith and strong knowledge. You balanced action, learning, and perseverance throughout the journey.";
-        } else if (faith > knowledge) {
-          result = "You finished with especially strong faith. Your choices showed courage, trust, and willingness to move forward.";
-        } else if (knowledge > faith) {
-          result = "You finished with especially strong knowledge. Your choices showed thoughtful learning, preparation, and understanding.";
-        } else {
-          result = "You finished with a balanced journey. You gained both faith and knowledge as you moved through these important events.";
-        }
-
-        document.getElementById("scene-text").textContent =
-          `Final Score — Faith: ${faith}, Knowledge: ${knowledge}. ${result}`;
-      } else {
-        document.getElementById("scene-text").textContent = scene.text;
-      }
+      document.getElementById("scene-art").textContent = scene.art;
+      document.getElementById("scene-text").textContent = scene.text;
 
       const choicesDiv = document.getElementById("choices");
       choicesDiv.innerHTML = "";
 
       scene.choices.forEach(choice => {
-        const button = document.createElement("button");
-        button.className = "choice-btn";
-        button.textContent = choice.text;
-        button.onclick = () => {
-          faith += choice.faith;
-          knowledge += choice.knowledge;
+        const btn = document.createElement("button");
+        btn.className = "choice-btn";
+        btn.textContent = choice.text;
+        btn.onclick = () => {
+          historyPoints += choice.history;
+          timelineStability += choice.stability;
+          if (timelineStability < 0) timelineStability = 0;
           updateStats();
           renderScene(choice.next);
         };
-        choicesDiv.appendChild(button);
+        choicesDiv.appendChild(btn);
       });
 
       const restartBtn = document.getElementById("restart-btn");
-      if (sceneKey === "ending") {
+      if (key === "trueEnding") {
+        document.getElementById("scene-text").textContent =
+          `You followed the real historical path successfully. Final score: ${historyPoints} history points, ${timelineStability} timeline stability. Joseph prayed, received revelation, obtained the plates, translated the Book of Mormon, received priesthood authority, and helped organize the Church.`;
         restartBtn.classList.remove("hidden");
       } else {
         restartBtn.classList.add("hidden");
@@ -267,8 +426,8 @@
     }
 
     document.getElementById("restart-btn").addEventListener("click", () => {
-      faith = 0;
-      knowledge = 0;
+      historyPoints = 0;
+      timelineStability = 100;
       updateStats();
       renderScene("start");
     });
