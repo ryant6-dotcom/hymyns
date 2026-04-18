@@ -3,18 +3,109 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Home</title>
-  <link rel="stylesheet" href="styles.css">
+  <title>Scratch Page | Ryan Thomas</title>
+  <link rel="stylesheet" href="scratch.css">
 </head>
 <body>
-  <nav>
-    <a href="index.html">Home</a> |
-    <a href="resume.html">Résumé</a> |
-    <a href="scratch.html">Scratch Page</a> |
+  <div class="top-bar">
+    <a href="index.html">Home</a>
+    <a href="resume.html">Résumé</a>
     <a href="app.html">Joseph Smith Game</a>
-  </nav>
+  </div>
 
-  <h1>Home Page</h1>
-  <p>Put your content here.</p>
+  <div class="hero">
+    <h1 id="top">Joseph Smith and Early Church History</h1>
+    <p>This page was built from scratch using HTML and CSS to highlight a topic that interests me.</p>
+    <a class="jump-link" href="#tableau-section">Jump to Tableau Graph</a>
+  </div>
+
+  <div class="content-box">
+    <h2>Why this topic interests me</h2>
+    <p>
+      I chose this topic because Joseph Smith and early Church history are meaningful to me and full of important events,
+      people, and places. This page also shows the required HTML elements for the project in one place.
+    </p>
+
+    <h2>Key events and themes</h2>
+    <ol>
+      <li>Important events
+        <ul>
+          <li>First Vision</li>
+          <li>Translation of the Book of Mormon</li>
+          <li>Organization of the Church</li>
+        </ul>
+      </li>
+      <li>Important places
+        <ul>
+          <li>Palmyra, New York</li>
+          <li>Kirtland, Ohio</li>
+          <li>Nauvoo, Illinois</li>
+        </ul>
+      </li>
+      <li>Important themes
+        <ul>
+          <li>Revelation</li>
+          <li>Faith</li>
+          <li>Perseverance</li>
+        </ul>
+      </li>
+    </ol>
+  </div>
+
+  <div class="media-box">
+    <h2>Image</h2>
+    <img src="images/joseph-smith.jpg" alt="Joseph Smith themed image" width="500">
+
+    <h2>YouTube Video</h2>
+    <iframe width="560" height="315"
+      src="https://www.youtube.com/embed/1xVw6PsSinI"
+      title="YouTube video player"
+      frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      allowfullscreen>
+    </iframe>
+  </div>
+
+  <div class="tableau-box" id="tableau-section">
+    <h2>Interactive Tableau Graph</h2>
+    <div class='tableauPlaceholder' id='viz1744930000000' style='position: relative'>
+      <noscript>
+        <a href='#'>
+          <img alt='Tableau Visualization'
+            src='https://public.tableau.com/static/images/Re/RegionalSampleWorkbook/Stocks/1_rss.png'
+            style='border: none' />
+        </a>
+      </noscript>
+      <object class='tableauViz' style='display:none;'>
+        <param name='host_url' value='https%3A%2F%2Fpublic.tableau.com%2F' />
+        <param name='embed_code_version' value='3' />
+        <param name='site_root' value='' />
+        <param name='name' value='RegionalSampleWorkbook/Stocks' />
+        <param name='tabs' value='no' />
+        <param name='toolbar' value='yes' />
+        <param name='static_image' value='https://public.tableau.com/static/images/Re/RegionalSampleWorkbook/Stocks/1.png' />
+        <param name='animate_transition' value='yes' />
+        <param name='display_static_image' value='yes' />
+        <param name='display_spinner' value='yes' />
+        <param name='display_overlay' value='yes' />
+        <param name='display_count' value='yes' />
+        <param name='language' value='en-US' />
+      </object>
+    </div>
+    <script type='text/javascript'>
+      var divElement = document.getElementById('viz1744930000000');
+      var vizElement = divElement.getElementsByTagName('object')[0];
+      vizElement.style.width = '100%';
+      vizElement.style.height = '827px';
+      var scriptElement = document.createElement('script');
+      scriptElement.src = 'https://public.tableau.com/javascripts/api/viz_v1.js';
+      vizElement.parentNode.insertBefore(scriptElement, vizElement);
+    </script>
+  </div>
+
+  <div class="footer-box">
+    <p><a href="#top">Back to top</a></p>
+    <p><a href="app.html">Go to Joseph Smith Game</a></p>
+  </div>
 </body>
 </html>
